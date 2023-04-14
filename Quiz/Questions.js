@@ -19,26 +19,26 @@ export default Questions = [
     ],
     ans: 'Google',
   },
-  {
-    question: 'Q1 : What Does HTML Stand For?',
-    options: [
-      'Hyper Text Markup Language',
-      'Hypers Tool Markup Language',
-      'Home Tool Markup Language',
-      'How Text Markup Language',
-    ],
-    ans: 'Hyper Text Markup Language',
-  },
-  {
-    question: 'Q2 : Who is making the Web standards?',
-    options: [
-      'Mozilla',
-      'The World Wide Web Consortium',
-      'Google',
-      'Microsoft',
-    ],
-    ans: 'Google',
-  },
+  // {
+  //   question: 'Q1 : What Does HTML Stand For?',
+  //   options: [
+  //     'Hyper Text Markup Language',
+  //     'Hypers Tool Markup Language',
+  //     'Home Tool Markup Language',
+  //     'How Text Markup Language',
+  //   ],
+  //   ans: 'Hyper Text Markup Language',
+  // },
+  // {
+  //   question: 'Q2 : Who is making the Web standards?',
+  //   options: [
+  //     'Mozilla',
+  //     'The World Wide Web Consortium',
+  //     'Google',
+  //     'Microsoft',
+  //   ],
+  //   ans: 'Google',
+  // },
   //   {
   //     question: 'Q3 : Choose the correct HTML element for the largest heading:',
   //     option1: 'heading',

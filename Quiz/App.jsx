@@ -9,6 +9,7 @@ const App = () => {
   const [correctoption, setcorrectoption] = useState(null);
   const [disableoption, setdisableoption] = useState(false);
   const [next, setnext] = useState(false);
+  const [playagain, setplayagain] = useState(false);
   const [score, setscore] = useState(1);
   const renderingQuestions = () => {
     return (
@@ -21,33 +22,68 @@ const App = () => {
     );
   };
   const NEXT = () => {
+    setdisableoption(false);
     setcurrentquestion(currentquestion + 1);
+    setnext(false);
   };
 
+  const renderNextButton = () => {
+    if (next) {
+      return (
+        <TouchableOpacity onPress={NEXT}>
+          <Text>Next</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  };
+  const playAgain = () => {
+    if (playagain) {
+      return (
+        <TouchableOpacity onPress={NEXT}>
+          <Text>Play Again</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  };
+// let zero = 0
+// console.log(zero.toString());
   // const Result = () => {
   //   setcurrentquestion(0);
   // };
   const handleselectedoption = selected => {
+    let zero = 0
     // console.log(selected === quesdata[currentquestion].ans);
     const correct_option = quesdata[currentquestion].ans;
     setcurrentoptionselected(selected);
     setcorrectoption(correct_option);
     setdisableoption(true);
     if (currentoptionselected === correctoption) {
-      setscore(score + 1);
-
       console.log('true');
+      setscore(zero + 1);
+      console.log(score);
+    }else{
+      console.log('false');
+      // setscore(score);
       console.log(score);
     }
     setnext(true);
-    if (currentquestion !== 3) {
+    // setdisableoption(true);
+    if (currentquestion !== 1) {
       // setcurrentquestion(currentquestion + 1);
     } else {
+      // console.log(score);
       let Score = score;
       Alert.alert(Score.toString(), 'YOUR FORM HAS BEEN SUBMITTED');
+      setnext(false);
+      // console.log(score);
     }
   };
-  const renderingOptions = () => {
+
+  const renderingoptions = () => {
     return (
       <View>
         {quesdata[currentquestion]?.options.map((options, index) => (
@@ -126,8 +162,8 @@ const App = () => {
         <Text>{quesdata.length}</Text>
       </View>
       <View>{renderingQuestions()}</View>
-      <View>{renderingOptions()}</View>
-     
+      <View>{renderingoptions()}</View>
+      <View>{renderNextButton()}</View>
     </View>
   );
 };
