@@ -1,4 +1,10 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {React, useState} from 'react';
 import Questions from './Questions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,8 +15,7 @@ const App = () => {
   const [correctoption, setcorrectoption] = useState(null);
   const [disableoption, setdisableoption] = useState(false);
   const [next, setnext] = useState(false);
-  const [playagain, setplayagain] = useState(false);
-  const [score, setscore] = useState(1);
+  const [score, setscore] = useState(0);
   const renderingQuestions = () => {
     return (
       <View>
@@ -22,67 +27,50 @@ const App = () => {
     );
   };
   const NEXT = () => {
-    setdisableoption(false);
-    setcurrentquestion(currentquestion + 1);
-    setnext(false);
+    if (currentquestion == quesdata.length - 1) {
+      setnext(false);
+      let Score = score;
+      Alert.alert(Score.toString(), 'YOUR FORM HAS BEEN SUBMITTED');
+    } else {
+      setcurrentquestion(currentquestion + 1);
+      setcurrentoptionselected(null);
+      setcorrectoption(null);
+      setdisableoption(false);
+      setnext(false);
+    }
   };
 
   const renderNextButton = () => {
     if (next) {
-      return (
-        <TouchableOpacity onPress={NEXT}>
-          <Text>Next</Text>
-        </TouchableOpacity>
-      );
+      if (currentquestion === quesdata.length - 1) {
+        return (
+          <TouchableOpacity onPress={NEXT}>
+            <Text>Score</Text>
+          </TouchableOpacity>
+        );
+      } else {
+        return (
+          <TouchableOpacity onPress={NEXT}>
+            <Text>Next</Text>
+          </TouchableOpacity>
+        );
+      }
     } else {
       return null;
     }
   };
-  const playAgain = () => {
-    if (playagain) {
-      return (
-        <TouchableOpacity onPress={NEXT}>
-          <Text>Play Again</Text>
-        </TouchableOpacity>
-      );
-    } else {
-      return null;
-    }
-  };
-// let zero = 0
-// console.log(zero.toString());
-  // const Result = () => {
-  //   setcurrentquestion(0);
-  // };
   const handleselectedoption = selected => {
-    let zero = 0
-    // console.log(selected === quesdata[currentquestion].ans);
     const correct_option = quesdata[currentquestion].ans;
     setcurrentoptionselected(selected);
     setcorrectoption(correct_option);
     setdisableoption(true);
-    if (currentoptionselected === correctoption) {
-      console.log('true');
-      setscore(zero + 1);
-      console.log(score);
-    }else{
-      console.log('false');
-      // setscore(score);
-      console.log(score);
-    }
-    setnext(true);
-    // setdisableoption(true);
-    if (currentquestion !== 1) {
-      // setcurrentquestion(currentquestion + 1);
-    } else {
-      // console.log(score);
-      let Score = score;
-      Alert.alert(Score.toString(), 'YOUR FORM HAS BEEN SUBMITTED');
-      setnext(false);
-      // console.log(score);
-    }
-  };
 
+    if (selected === correct_option) {
+      setscore(score + 1);
+    }
+
+    setnext(true);
+  };
   const renderingoptions = () => {
     return (
       <View>
@@ -167,7 +155,6 @@ const App = () => {
     </View>
   );
 };
-export default App;
 
 const styles = StyleSheet.create({
   counting: {
@@ -179,11 +166,5 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-// {currentquestion !== 3 && (
-// <TouchableOpacity
-//   style={{backgroundColor: 'grey', width: 50, marginLeft: 20}}
-//   onPress={NEXT}>
-//   <Text>NEXT</Text>
-// </TouchableOpacity>
-// )}
-// <Icon name="cross" key={options} size={25} color="black" />
+
+export default App;
