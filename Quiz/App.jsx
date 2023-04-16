@@ -4,10 +4,79 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from 'react-native';
 import {React, useState} from 'react';
 import Questions from './Questions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
+import * as Animatable from 'react-native-animatable';
+const devicewidth = Dimensions.get('window').width;
+const deviceheight = Dimensions.get('window').height;
+
+const styles = StyleSheet.create({
+  main: {
+    height: deviceheight,
+    width: devicewidth,
+    backgroundColor: '#2e2d4d',
+  },
+  countingView: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: responsiveWidth(35),
+    height: responsiveHeight(5),
+    color: 'white',
+    backgroundColor: 'silver',
+    marginTop: responsiveHeight(10),
+    marginBottom: responsiveFontSize(3),
+    marginLeft: responsiveWidth(3),
+    // textAlign: 'center',
+    // margin:20
+  },
+  countingText: {
+    color: 'white',
+    fontSize: responsiveFontSize(2),
+    // textAlign: 'left',
+  },
+  questionView: {
+    display: 'flex',
+    alignSelf: 'center',
+    width: responsiveWidth(100),
+    backgroundColor: 'purple',
+    // padding: 10,
+    margin: 10,
+    paddingHorizontal: responsiveWidth(4),
+  },
+  questionText: {
+    color: 'white',
+    fontSize: responsiveFontSize(2),
+    lineHeight: 20,
+    // textAlign: 'center',
+    flexWrap: 'wrap',
+  },
+  optionView: {
+    // backgroundColor: 'yellow',
+    // marginTop: 20,
+  },
+  OPTION: {
+    display: 'flex',
+    alignSelf: 'center',
+    // backgroundColor: 'silver',
+    marginVertical:responsiveHeight(1.5)
+  },
+  nextView: {
+    backgroundColor: 'pink',
+    margin: 20,
+  },
+});
+
 const App = () => {
   const quesdata = Questions;
   const [currentquestion, setcurrentquestion] = useState(0);
@@ -20,8 +89,9 @@ const App = () => {
     return (
       <View>
         <View>
-          <Text>{quesdata[currentquestion]?.question}</Text>
-          <Text>{quesdata[currentquestion]?.['ans']}</Text>
+          <Text style={styles.questionText}>
+            {quesdata[currentquestion]?.question}
+          </Text>
         </View>
       </View>
     );
@@ -76,62 +146,67 @@ const App = () => {
       <View>
         {quesdata[currentquestion]?.options.map((options, index) => (
           <View key={index}>
-            <View>
+            <View style={styles.OPTION}>
               <TouchableOpacity
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent:'space-between',
+                  borderWidth: 2,
+                  borderColor:
+                    options == correctoption
+                      ? 'green'
+                      : options == currentoptionselected
+                      ? 'red'
+                      : 'black',
+                      width: responsiveWidth(90),
+                      height: responsiveHeight(7),
+                  // textAlign: 'center',
+                  paddingHorizontal:10
+                  // textAlignVertical: 'center',
+                }}
                 onPress={() => handleselectedoption(options)}
                 disabled={disableoption}
                 key={options}>
                 <Text
-                  style={{
-                    marginTop: 5,
-                    borderWidth: 2,
-                    borderColor:
-                      options == correctoption
-                        ? 'green'
-                        : options == currentoptionselected
-                        ? 'red'
-                        : 'black',
-                    width: 265,
-                    textAlign: 'center',
-                    height: 80,
-                    textAlignVertical: 'center',
-                  }}>
+                  style={
+                    {
+                      fontSize: responsiveFontSize(2),
+                      color:'white'
+                      // marginTop: 5,
+                    }
+                  }>
                   {options}
                 </Text>
                 {options == correctoption ? (
                   <View
                     style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 30 / 2,
+                      width: responsiveWidth(8),
+                      height: responsiveHeight(4),
+                      borderRadius: 14,
                       backgroundColor: 'green',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <MaterialCommunityIcons
                       name="check"
-                      style={{
-                        color: 'white',
-                        fontSize: 20,
-                      }}
+                      style={{color: 'white', fontSize: 18}}
                     />
                   </View>
                 ) : options == currentoptionselected ? (
                   <View
                     style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 30 / 2,
+                      width: responsiveWidth(8),
+                      height: responsiveHeight(4),
+                      borderRadius: 14,
                       backgroundColor: 'red',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <MaterialCommunityIcons
                       name="close"
-                      style={{
-                        color: 'white',
-                        fontSize: 20,
-                      }}
+                      style={{color: 'white', fontSize: 18}}
                     />
                   </View>
                 ) : null}
@@ -144,27 +219,16 @@ const App = () => {
   };
 
   return (
-    <View>
-      <View style={styles.counting}>
-        <Text>{currentquestion + 1}/</Text>
-        <Text>{quesdata.length}</Text>
+    <View style={styles.main}>
+      <View style={styles.countingView}>
+        <Text style={styles.countingText}>Q.{currentquestion + 1}/</Text>
+        <Text style={styles.countingText}>Q.{quesdata.length}</Text>
       </View>
-      <View>{renderingQuestions()}</View>
-      <View>{renderingoptions()}</View>
-      <View>{renderNextButton()}</View>
+      <View style={styles.questionView}>{renderingQuestions()}</View>
+      <View style={styles.optionView}>{renderingoptions()}</View>
+      <View style={styles.nextView}>{renderNextButton()}</View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  counting: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: 20,
-  },
-  text: {
-    color: 'white',
-  },
-});
 
 export default App;
