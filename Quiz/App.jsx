@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Image,
 } from 'react-native';
 import {React, useState, useEffect} from 'react';
 import Questions from './Questions';
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     width: devicewidth,
     backgroundColor: '#2e2d4d',
   },
-  scoreView:{
+  scoreView: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     // height: responsiveHeight(5),
     color: 'white',
     // backgroundColor: 'black',
-    marginTop: responsiveHeight(10),
+    marginTop: responsiveHeight(2),
     marginBottom: responsiveFontSize(3),
     marginHorizontal: responsiveWidth(3),
     // textAlign: 'center',
@@ -95,31 +96,42 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     width: responsiveWidth(100),
-    backgroundColor: 'purple',
+    // backgroundColor: 'purple',
     // padding: 10,
-    margin: 10,
+    // margin: 10,
     paddingHorizontal: responsiveWidth(4),
   },
   questionText: {
-    color: 'white',
+    color: 'black',
     fontSize: responsiveFontSize(2),
     lineHeight: 20,
     // textAlign: 'center',
     flexWrap: 'wrap',
   },
   optionView: {
-    // backgroundColor: 'yellow',
-    // marginTop: 20,
+    backgroundColor: '#b49156',
+    marginTop: responsiveHeight(2),
   },
   OPTION: {
     display: 'flex',
     alignSelf: 'center',
     // backgroundColor: 'silver',
-    marginVertical: responsiveHeight(1.5),
+    marginVertical: responsiveHeight(1),
   },
   nextView: {
-    backgroundColor: 'pink',
-    margin: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    // backgroundColor: 'red',
+    alignItems: 'center',
+  },
+  NextText: {
+    width: responsiveWidth(100),
+    height: responsiveHeight(7),
+    backgroundColor: 'silver',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -131,7 +143,7 @@ const App = () => {
   const [disableoption, setdisableoption] = useState(false);
   const [next, setnext] = useState(false);
   const [score, setscore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(100000);
   const [Qremain, setQremain] = useState(1);
 
   useEffect(() => {
@@ -198,7 +210,7 @@ const App = () => {
         );
       } else {
         return (
-          <TouchableOpacity onPress={NEXT}>
+          <TouchableOpacity style={styles.NextText} onPress={NEXT}>
             <Text>Next</Text>
           </TouchableOpacity>
         );
@@ -232,11 +244,17 @@ const App = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderWidth: 2,
+                  backgroundColor:
+                    options == correctoption
+                      ? '#4CAF50'
+                      : options == currentoptionselected
+                      ? '#E53935'
+                      : 'transparent',
                   borderColor:
                     options == correctoption
-                      ? 'green'
+                      ? '#4CAF50'
                       : options == currentoptionselected
-                      ? 'red'
+                      ? '#E53935'
                       : 'black',
                   width: responsiveWidth(90),
                   height: responsiveHeight(7),
@@ -261,13 +279,16 @@ const App = () => {
                       width: responsiveWidth(8),
                       height: responsiveHeight(4),
                       borderRadius: 14,
-                      backgroundColor: 'green',
+                      backgroundColor: 'white',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <MaterialCommunityIcons
                       name="check"
-                      style={{color: 'white', fontSize: 18}}
+                      style={{
+                        color: '#4CAF50',
+                        fontSize: responsiveFontSize(3),
+                      }}
                     />
                   </View>
                 ) : options == currentoptionselected ? (
@@ -276,13 +297,16 @@ const App = () => {
                       width: responsiveWidth(8),
                       height: responsiveHeight(4),
                       borderRadius: 14,
-                      backgroundColor: 'red',
+                      backgroundColor: 'white',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <MaterialCommunityIcons
                       name="close"
-                      style={{color: 'white', fontSize: 18}}
+                      style={{
+                        color: '#E53935',
+                        fontSize: responsiveFontSize(3),
+                      }}
                     />
                   </View>
                 ) : null}
@@ -296,29 +320,37 @@ const App = () => {
 
   return (
     <View style={styles.main}>
-      <View  style={styles.scoreView}>
-        <View>
-          <Text style={styles.countingText}>Score : {score}</Text>
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: responsiveWidth(100),
+          height: responsiveHeight(55),
+          borderBottomRightRadius: 30,
+          borderBottomLeftRadius: 30,
+        }}>
+        <Image
+          style={{
+            width: responsiveWidth(100),
+            height: responsiveHeight(35),
+            borderBottomRightRadius: 30,
+            borderBottomLeftRadius: 30,
+          }}
+          source={require('./back.jpg')}
+        />
+        <View style={styles.countingTimerView}>
+          <View style={styles.countingView}>
+            <Text style={styles.countingText}>
+              Questions Left : 0{quesdata.length - currentquestion - Qremain}
+            </Text>
+          </View>
+          <View style={styles.TimerView}>
+            <Text style={styles.countingText}>Time To Go : </Text>
+            <Text style={styles.countingText}>{formatTime(timeLeft)}</Text>
+          </View>
         </View>
-        <View  style={styles.score}>
-          <MaterialCommunityIcons
-            name="cash-fast"
-            style={{color: 'green', fontSize: 18}}
-          />
-        </View>
+        <View style={styles.questionView}>{renderingQuestions()}</View>
       </View>
-      <View style={styles.countingTimerView}>
-        <View style={styles.countingView}>
-          <Text style={styles.countingText}>
-            Questions Left : 0{quesdata.length - currentquestion - Qremain}
-          </Text>
-        </View>
-        <View style={styles.TimerView}>
-          <Text style={styles.countingText}>Time To Go : </Text>
-          <Text style={styles.countingText}>{formatTime(timeLeft)}</Text>
-        </View>
-      </View>
-      <View style={styles.questionView}>{renderingQuestions()}</View>
+    
       <View style={styles.optionView}>{renderingoptions()}</View>
       <View style={styles.nextView}>{renderNextButton()}</View>
     </View>
@@ -326,3 +358,14 @@ const App = () => {
 };
 
 export default App;
+// <View style={styles.scoreView}>
+// <View>
+//   <Text style={styles.countingText}>Score : {score}</Text>
+// </View>
+// <View style={styles.score}>
+//   <MaterialCommunityIcons
+//     name="cash-fast"
+//     style={{color: 'green', fontSize: 18}}
+//   />
+// </View>
+// </View>
