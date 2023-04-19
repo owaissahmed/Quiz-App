@@ -6,10 +6,12 @@ import {
   View,
   Dimensions,
   Image,
+  ImageBackground
 } from 'react-native';
 import {React, useState, useEffect} from 'react';
 import Questions from './Questions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
   main: {
     height: deviceheight,
     width: devicewidth,
-    backgroundColor: '#2e2d4d',
+    backgroundColor: 'white',
   },
   scoreView: {
     display: 'flex',
@@ -57,15 +59,15 @@ const styles = StyleSheet.create({
     // height: responsiveHeight(5),
     color: 'white',
     // backgroundColor: 'black',
-    marginTop: responsiveHeight(2),
-    marginBottom: responsiveFontSize(3),
+    marginVertical: responsiveHeight(2),
     marginHorizontal: responsiveWidth(3),
     // textAlign: 'center',
     // margin:20
   },
   countingView: {
-    backgroundColor: 'silver',
-    padding: 8,
+    backgroundColor: 'lightgray',
+    paddingHorizontal: responsiveWidth(2.5),
+    paddingVertical: responsiveHeight(0.5),
     alignSelf: 'center',
     width: responsiveWidth(45),
     borderTopRightRadius: 10,
@@ -75,18 +77,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   TimerView: {
-    backgroundColor: 'silver',
+    backgroundColor: 'lightgray',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 8,
+    // padding: 8,
+    paddingHorizontal: responsiveWidth(3),
+    paddingVertical: responsiveHeight(0.5),
     alignSelf: 'center',
     width: responsiveWidth(45),
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
   countingText: {
-    color: 'white',
+    color: 'black',
     fontSize: responsiveFontSize(2),
     // textAlign: 'center',
     // textAlign:'left'
@@ -99,6 +103,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'purple',
     // padding: 10,
     // margin: 10,
+    // marginVertical:responsiveHeight(1),
     paddingHorizontal: responsiveWidth(4),
   },
   questionText: {
@@ -109,8 +114,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   optionView: {
-    backgroundColor: '#b49156',
-    marginTop: responsiveHeight(2),
+    // backgroundColor: '#302917',
+    marginTop: responsiveHeight(1),
+    
   },
   OPTION: {
     display: 'flex',
@@ -126,13 +132,17 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     alignItems: 'center',
   },
-  NextText: {
+  NextBtn: {
     width: responsiveWidth(100),
     height: responsiveHeight(7),
-    backgroundColor: 'silver',
+    backgroundColor: 'lightgray',
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
+  NextText:{
+    color:'black'
+  }
 });
 
 const App = () => {
@@ -143,7 +153,7 @@ const App = () => {
   const [disableoption, setdisableoption] = useState(false);
   const [next, setnext] = useState(false);
   const [score, setscore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(100000);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [Qremain, setQremain] = useState(1);
 
   useEffect(() => {
@@ -204,14 +214,14 @@ const App = () => {
     if (next) {
       if (currentquestion === quesdata.length - 1) {
         return (
-          <TouchableOpacity onPress={NEXT}>
-            <Text>Score</Text>
+          <TouchableOpacity style={styles.NextBtn} onPress={NEXT}>
+            <Text style={styles.NextText}>Score</Text>
           </TouchableOpacity>
         );
       } else {
         return (
-          <TouchableOpacity style={styles.NextText} onPress={NEXT}>
-            <Text>Next</Text>
+          <TouchableOpacity style={styles.NextBtn} onPress={NEXT}>
+            <Text style={styles.NextText}>Next</Text>
           </TouchableOpacity>
         );
       }
@@ -244,6 +254,7 @@ const App = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderWidth: 2,
+                  borderRadius:10,
                   backgroundColor:
                     options == correctoption
                       ? '#4CAF50'
@@ -267,8 +278,8 @@ const App = () => {
                 key={options}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2),
-                    color: 'white',
+                    fontSize: responsiveFontSize(1.75),
+                    color:'black',
                     // marginTop: 5,
                   }}>
                   {options}
@@ -320,38 +331,43 @@ const App = () => {
 
   return (
     <View style={styles.main}>
-      <View
-        style={{
-          backgroundColor: 'white',
-          width: responsiveWidth(100),
-          height: responsiveHeight(55),
-          borderBottomRightRadius: 30,
-          borderBottomLeftRadius: 30,
-        }}>
-        <Image
+      <View>
+        <LinearGradient
+          colors={['#7B6847', '#fff']}
           style={{
             width: responsiveWidth(100),
-            height: responsiveHeight(35),
+            height: responsiveHeight(95),
             borderBottomRightRadius: 30,
             borderBottomLeftRadius: 30,
-          }}
-          source={require('./back.jpg')}
-        />
-        <View style={styles.countingTimerView}>
-          <View style={styles.countingView}>
-            <Text style={styles.countingText}>
-              Questions Left : 0{quesdata.length - currentquestion - Qremain}
-            </Text>
+          }}>
+          <Image
+            style={{
+              width: responsiveWidth(100),
+              height: responsiveHeight(42),
+              borderBottomRightRadius: 40,
+              borderBottomLeftRadius: 40,
+              alignSelf: 'center',
+              // marginTop: 8,
+            }}
+            source={require('./back.jpg')}
+          />
+         
+          <View style={styles.countingTimerView}>
+            <View style={styles.countingView}>
+              <Text style={styles.countingText}>
+                Questions Left : 0{quesdata.length - currentquestion - Qremain}
+              </Text>
+            </View>
+
+            <View style={styles.TimerView}>
+              <Text style={styles.countingText}>Time To Go : </Text>
+              <Text style={styles.countingText}>{formatTime(timeLeft)}</Text>
+            </View>
           </View>
-          <View style={styles.TimerView}>
-            <Text style={styles.countingText}>Time To Go : </Text>
-            <Text style={styles.countingText}>{formatTime(timeLeft)}</Text>
-          </View>
-        </View>
-        <View style={styles.questionView}>{renderingQuestions()}</View>
+          <View style={styles.questionView}>{renderingQuestions()}</View>
+          <View style={styles.optionView}>{renderingoptions()}</View>
+        </LinearGradient>
       </View>
-    
-      <View style={styles.optionView}>{renderingoptions()}</View>
       <View style={styles.nextView}>{renderNextButton()}</View>
     </View>
   );
