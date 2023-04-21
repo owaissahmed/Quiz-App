@@ -27,7 +27,7 @@ const Splash = ({navigation}) => {
   }, []);
   function gotoQuiz() {
     setTimeout(() => {
-      navigation.navigate('Quiz');
+      navigation.replace('Topic');
     }, 3000);
   }
 

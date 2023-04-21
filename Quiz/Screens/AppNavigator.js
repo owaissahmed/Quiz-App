@@ -4,6 +4,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Quiz from './Quiz';
 import Splash from './Splash';
 import Topic from './Topic';
+import CssQuiz from './CssQuiz';
+import JsQuiz from './JsQuiz';
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
@@ -22,6 +24,16 @@ const AppNavigator = () => {
         <Stack.Screen
           component={Topic}
           name="Topic"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={CssQuiz}
+          name="CssQuiz"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={JsQuiz}
+          name="JsQuiz"
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Button,
 } from 'react-native';
 import {React, useState, useEffect} from 'react';
 import Questions from './Questions';
@@ -17,6 +18,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import Modal from 'react-native-modal';
 import * as Animatable from 'react-native-animatable';
 const devicewidth = Dimensions.get('window').width;
 const deviceheight = Dimensions.get('window').height;
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   },
   countingText: {
     color: '#7B6847',
-    fontWeight:500,
+    fontWeight: 500,
     fontSize: responsiveFontSize(2.25),
     // textAlign: 'center',
     // textAlign:'left'
@@ -112,12 +114,12 @@ const styles = StyleSheet.create({
     // margin: 10,
     //   marginHorizontal:responsiveWidth(3),
     // marginHorizontal:responsiveHeight(1),
-      paddingHorizontal: responsiveWidth(2),
+    paddingHorizontal: responsiveWidth(2),
     paddingVertical: responsiveHeight(0.5),
   },
   questionText: {
     color: '#7B6847',
-    fontWeight:500,
+    fontWeight: 500,
     fontSize: responsiveFontSize(2.5),
     //   lineHeight: 20,
     alignContent: 'center',
@@ -150,14 +152,44 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  CloseBtn: {
+    width: responsiveWidth(100),
+    height: responsiveHeight(7),
+    // backgroundColor: 'brown',
+    // alignContent:'flex-end',
+    // alignSelf:'flex-end',
+    justifyContent: 'center',
+    // backgroundColor: 'red',
+    alignItems: 'center',
+  },
+  CloseText: {
+    color: '#7B6847',
+    fontWeight: 500,
+    fontSize: responsiveFontSize(3),
+    marginVertical: responsiveHeight(1),
+  },
+  FinalScore: {
+    color: '#7B6847',
+    fontWeight: 500,
+    fontSize: responsiveFontSize(6.5),
+    marginVertical: responsiveHeight(1),
+  },
   NextText: {
     color: '#7B6847',
-    fontWeight:500,
+    fontWeight: 500,
     fontSize: responsiveFontSize(2.5),
+  },
+  modalView: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    width: responsiveWidth(90),
+    height: responsiveHeight(30),
+    borderRadius: 20,
   },
 });
 
-const Quiz = () => {
+const Quiz = ({navigation}) => {
   const quesdata = Questions;
   const [currentquestion, setcurrentquestion] = useState(0);
   const [currentoptionselected, setcurrentoptionselected] = useState(null);
@@ -165,13 +197,14 @@ const Quiz = () => {
   const [disableoption, setdisableoption] = useState(false);
   const [next, setnext] = useState(false);
   const [score, setscore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(1000);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [Qremain, setQremain] = useState(1);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (timeLeft === 0) {
-      Alert.alert(`Time's up! Your score is ${score}`);
-
+      Alert.alert(`⚠️Time's up! Your score is ${score}`);
+      navigation.navigate('Topic');
       setdisableoption(true);
       setnext(false);
     } else {
@@ -181,6 +214,21 @@ const Quiz = () => {
       return () => clearTimeout(timer);
     }
   }, [timeLeft, score]);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+  const closeModal = () => {
+    setModalVisible(!isModalVisible);
+    navigation.navigate('Topic');
+    setcurrentquestion(0);
+    setcurrentoptionselected(null);
+    setcorrectoption(null);
+    setdisableoption(false);
+    setnext(false);
+    setTimeLeft(1000);
+    setscore(0);
+  };
 
   const formatTime = time => {
     const minutes = Math.floor(time / 60).toLocaleString('en-US', {
@@ -211,8 +259,6 @@ const Quiz = () => {
   const NEXT = () => {
     if (currentquestion == quesdata.length - 1) {
       setnext(false);
-      let Score = score;
-      Alert.alert(Score.toString(), 'YOUR FORM HAS BEEN SUBMITTED');
     } else {
       setcurrentquestion(currentquestion + 1);
       setcurrentoptionselected(null);
@@ -226,11 +272,35 @@ const Quiz = () => {
     if (next) {
       if (currentquestion === quesdata.length - 1) {
         return (
-          <TouchableOpacity style={styles.NextBtn} onPress={NEXT}>
-            <Text allowFontScaling={false} style={styles.NextText}>
-              Score
-            </Text>
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity style={styles.NextBtn} onPress={toggleModal}>
+              <Text allowFontScaling={false} style={styles.NextText}>
+                Score
+              </Text>
+            </TouchableOpacity>
+            <Modal
+              isVisible={isModalVisible}
+              animationIn="zoomIn"
+              animationOut="zoomOut"
+              animationInTiming={500}
+              animationOutTiming={500}
+              backdropTransitionInTiming={500}
+              backdropTransitionOutTiming={500}>
+              <View style={styles.modalView}>
+                <Text allowFontScaling={false} style={styles.CloseText}>
+                  Your Final Score Is
+                </Text>
+                <Text allowFontScaling={false} style={styles.FinalScore}>
+                  {score}
+                </Text>
+                <TouchableOpacity style={styles.CloseBtn} onPress={closeModal}>
+                  <Text allowFontScaling={false} style={styles.NextText}>
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+          </View>
         );
       } else {
         return (
@@ -252,7 +322,7 @@ const Quiz = () => {
     setdisableoption(true);
 
     if (selected === correct_option) {
-      setscore(score + 1);
+      setscore(score + 10);
     }
 
     setnext(true);
@@ -360,7 +430,7 @@ const Quiz = () => {
           <Image
             style={{
               width: responsiveWidth(100),
-              height: responsiveHeight(42),
+              height: responsiveHeight(40),
               borderBottomRightRadius: 40,
               borderBottomLeftRadius: 40,
               alignSelf: 'center',
@@ -395,25 +465,3 @@ const Quiz = () => {
 };
 
 export default Quiz;
-// <View style={styles.scoreView}>
-// <View>
-//   <Text style={styles.countingText}>Score : {score}</Text>
-// </View>
-// <View style={styles.score}>
-//   <MaterialCommunityIcons
-//     name="cash-fast"
-//     style={{color: 'green', fontSize: 18}}
-//   />
-// </View>
-// </View>
-//   <Image
-//               style={{
-//                 width: responsiveWidth(40),
-//                 height: responsiveHeight(12),
-//                 borderBottomRightRadius: 40,
-//                 borderBottomLeftRadius: 40,
-//                 alignSelf: 'center',
-//                 // marginTop: 8,
-//               }}
-//               source={require('../quizzler-bg.png')}
-//             />

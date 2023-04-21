@@ -21,7 +21,7 @@ import * as Animatable from 'react-native-animatable';
 const devicewidth = Dimensions.get('window').width;
 const deviceheight = Dimensions.get('window').height;
 
-const Topic = () => {
+const Topic = ({navigation}) => {
   return (
     <View style={styles.main}>
       <LinearGradient
@@ -32,20 +32,30 @@ const Topic = () => {
           //   borderBottomRightRadius: 30,
           //   borderBottomLeftRadius: 30,
         }}>
-        <View style={styles.topicView}>
-          <Text style={styles.topic} allowFontScaling={false}>
-            HTML
-          </Text>
-          <Text style={styles.topic} allowFontScaling={false}>
-            HTML
-          </Text>
-          <Text style={styles.topic} allowFontScaling={false}>
-            HTML
-          </Text>
-          <Text style={styles.topic} allowFontScaling={false}>
-            HTML
-          </Text>
-        </View>
+        <Animatable.View  animation={'slideInUp'}
+        duration={2000} style={styles.topicView}>
+          <TouchableOpacity
+            style={styles.NextBtn}
+            onPress={() => navigation.navigate('Quiz')}>
+            <Text style={styles.NextText} allowFontScaling={false}>
+              HTML
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NextBtn}
+            onPress={() => navigation.navigate('CssQuiz')}>
+            <Text style={styles.NextText} allowFontScaling={false}>
+              CSS
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NextBtn}
+            onPress={() => navigation.navigate('JsQuiz')}>
+            <Text style={styles.NextText} allowFontScaling={false}>
+              JAVASCRIPT
+            </Text>
+          </TouchableOpacity>
+        </Animatable.View>
       </LinearGradient>
     </View>
   );
@@ -63,17 +73,23 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
   },
-  topic: {
-    // marginVertical:responsiveHeight(1),
-    width: responsiveWidth(90),
+  NextBtn: {
+    width: responsiveWidth(100),
     height: responsiveHeight(7),
     backgroundColor: 'white',
-    color: '#7B6847',
-    marginVertical: responsiveHeight(1.5),
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: responsiveFontSize(2.75),
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 20,
-  fontWeight:500
+    width: responsiveWidth(90),
+    height: responsiveHeight(7),
+    marginVertical: responsiveHeight(2),
+  },
+  NextText: {
+    // backgroundColor: 'white',
+    color: '#7B6847',
+
+    fontSize: responsiveFontSize(2.75),
+
+    fontWeight: 500,
   },
 });
