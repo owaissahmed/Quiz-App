@@ -25,7 +25,7 @@ const Topic = ({navigation}) => {
   return (
     <View style={styles.main}>
       <LinearGradient
-        colors={['#7B6847', '#fff']}
+        colors={['#7B6847','#7B6847',]}
         style={{
           width: responsiveWidth(100),
           height: responsiveHeight(100),
@@ -55,6 +55,20 @@ const Topic = ({navigation}) => {
               JAVASCRIPT
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NextBtn}
+            onPress={() => navigation.navigate('ReactQuiz')}>
+            <Text style={styles.NextText} allowFontScaling={false}>
+              REACT
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NextBtn}
+            onPress={() => navigation.navigate('RN-Quiz')}>
+            <Text style={styles.NextText} allowFontScaling={false}>
+              REACT-NATIVE
+            </Text>
+          </TouchableOpacity>
         </Animatable.View>
       </LinearGradient>
     </View>
@@ -70,7 +84,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   topicView: {
-    // justifyContent: 'center',
+    flex:1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   NextBtn: {
